@@ -29,6 +29,6 @@
       state=present
   with_items:
       - { regexp: ';php_flag\[display_errors\] = off', line: 'php_flag[display_errors] = on' }
-      - { regexp: ';catch_workers_ers_output = yes' }
+      - { regexp: ';catch_workers_output = yes', line: 'catch_workers_output = yes' }
   notify:
     - restart fpm

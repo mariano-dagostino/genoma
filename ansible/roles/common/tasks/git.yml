@@ -1,0 +1,6 @@
+- name: Install git
+  apt: name=git-core
+
+- name: Define git aliases
+  copy: src=.gitconfig dest=~
+  sudo: no

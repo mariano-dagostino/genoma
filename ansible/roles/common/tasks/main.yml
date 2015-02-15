@@ -1,0 +1,13 @@
+- name: Upgrade repo info. # Run only if didn't run in the last hour.
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install aptitude
+  apt: name=aptitude state=present
+
+- name: Upgrade packages
+  apt: upgrade=full
+
+- hostname: name={{ hostname }}
+
+- include: git.yml
+- include: tools.yml

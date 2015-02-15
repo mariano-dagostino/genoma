@@ -1,0 +1,12 @@
+- include: php54.yml
+  when: version == "5.4"
+
+- include: php55.yml
+  when: version == "5.5"
+
+- include: php56.yml
+  when: version == "5.6"
+
+# Configure PHP for development
+- include: php56dev.yml
+  when: env == "dev"

@@ -7,3 +7,4 @@
     - { role: php, version: "5.6", env: dev }
     - { role: dev/composer }
     - { role: database, vendor: mariadb }
+    - { role: common/host, hostname: drupal.example.com }

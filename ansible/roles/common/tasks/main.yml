@@ -7,7 +7,13 @@
 - name: Upgrade packages
   apt: upgrade=full
 
-- hostname: name={{ hostname }}
+- name: Change the hostname
+  hostname: name={{ hostname }}
+  register: hostname_set
+
+- name: Set the hostname in the /etc/host
+  lineinfile: dest=/etc/hosts line='127.0.0.1 {{ hostname }}'
+  when: hostname_set.changed
 
 - include: git.yml
 - include: tools.yml

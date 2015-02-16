@@ -1,4 +1,4 @@
-- hosts: vm
+- hosts: all
   sudo: True
   remote_user: vagrant
   roles:
@@ -8,3 +8,4 @@
     - { role: dev/composer }
     - { role: database, vendor: mariadb }
     - { role: common/host, hostname: drupal.example.com }
+    - { role: dev/phpmyadmin, configure: nginx }

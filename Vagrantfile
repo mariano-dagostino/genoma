@@ -23,4 +23,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Change memory:
       vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
+
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/ansible.yml"
+  end
 end

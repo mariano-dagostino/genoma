@@ -5,7 +5,9 @@
     - { role: common, hostname: testvm }
     - { role: webserver, web_server: nginx }
     - { role: php, version: "5.6", env: dev }
+    - { role: dev/tools }
     - { role: dev/composer }
+    - { role: dev/drush }
     - { role: database, vendor: mariadb }
     - { role: common/host, hostname: drupal.example.com }
     - { role: dev/phpmyadmin, configure: nginx }

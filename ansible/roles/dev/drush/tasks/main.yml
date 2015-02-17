@@ -1,0 +1,21 @@
+- name: Whoami
+  command: whoami
+  register: main_user
+  sudo: no
+  changed_when: False
+
+- name: Check if drush is present
+  stat: path=/home/{{ main_user.stdout }}/.composer/vendor/drush/drush
+  register: drushdir
+  changed_when: False
+  sudo: no
+
+- name: Install drush
+  shell: composer global require drush/drush:6.*
+  when: drushdir.stat.exists == False
+  sudo: no
+
+- name: Make drush globally available
+  file: src=/home/{{ main_user.stdout }}/.composer/vendor/drush/drush/drush path=/usr/bin/drush state=link mode=u+x
+
+

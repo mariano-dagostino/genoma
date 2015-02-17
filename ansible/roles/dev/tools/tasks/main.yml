@@ -1,0 +1,54 @@
+- name: Whoami
+  command: whoami
+  register: main_user
+  sudo: no
+  changed_when: False
+
+- name: Install vim and ctags
+  apt: name={{item}}
+  with_items:
+    - vim
+    - exuberant-ctags
+  when: install_vim
+
+- name: Check if amix/vimrc is already configured
+  stat: path=~/.vim_runtime
+  register: vim_configured
+  changed_when: False
+  sudo: no
+  when: install_amix
+
+- name: Make Vim easier to use (install amix/vim)
+  shell: "{{item}}"
+  with_items:
+    - git clone git://github.com/amix/vimrc.git ~/.vim_runtime
+    - sh ~/.vim_runtime/install_awesome_vimrc.sh
+  sudo: no
+  when: install_amix and vim_configured.stat.exists == False
+
+- name: Install zsh
+  apt: name=zsh state=present
+  when: install_ohmyzsh
+
+- name: Check if zsh is arelady downloaded
+  stat: path=~/.oh-my-zsh
+  register: zsh_configured
+  changed_when: False
+  sudo: no
+  when: install_ohmyzsh
+
+- name: Install oh-my-zsh
+  command: git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+  when: install_ohmyzsh and zsh_configured.stat.exists == False
+  sudo: no
+
+- name: Set zsh as default shell
+  user: name={{ main_user.stdout }} shell="/bin/zsh"
+  when: install_ohmyzsh
+
+- name: Configure oh-my-zsh
+  template: src=.zshrc dest=~/
+  sudo: no
+  when: install_ohmyzsh
+
+

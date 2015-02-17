@@ -1,0 +1,4 @@
+install_vim: true
+install_amix: true
+install_ohmyzsh: true
+ohmyzsh_theme: 'gallifrey'

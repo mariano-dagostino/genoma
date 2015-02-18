@@ -31,7 +31,7 @@
 - name: Update mysql root password for all root accounts
   mysql_user: name=root host={{item}} password=root
   with_items:
-    - $ansible_hostname
+    - "{{ ansible_hostname }}"
     - 127.0.0.1
     - ::1
     - localhost

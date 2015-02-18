@@ -1,0 +1,50 @@
+- name: Check if the Drupal App is already created
+  stat: path={{ root_dir }}/{{ drupal_folder_name }}
+  register: drupal_installed
+
+- name: Debug
+  debug: var=drupal_installed
+
+- name: Download drupal
+  command: "drush dl drupal-{{ drupal_version }} --destination={{ root_dir }} --drupal-project-rename={{ drupal_folder_name }} {{ drush_options }} -y"
+  when: drupal_installed.stat.exists == false
+  register: drupal_downloaded
+
+- name: Debug
+  debug: var=drupal_downloaded
+
+- name: Create the database
+  mysql_db: name={{ database }} state=present
+
+- name: Add the app domain to the hosts file
+  lineinfile:
+    dest=/etc/hosts
+    line="127.0.0.1 {{ hostname }}"
+    state=present
+
+- name: Check if the app is already installed
+  command: "drush core-status --fields=bootstrap"
+  args:
+    chdir: "{{ root_dir }}/{{ drupal_folder_name }}"
+  register: drupal_app_installed
+  when: drupal_install == "yes" and (drupal_installed.stat.exists == true or drupal_downloaded.stderr.find("downloaded to") != -1)
+  changed_when: false
+
+- name: debug app installed
+  debug: var=drupal_app_installed
+
+- name: Install drupal app
+  command: "drush si {{ drupal_profile }} --account-name={{ drupal_admin_user }} --account-pass={{ drupal_admin_pass }} --db-url={{ drupal_db_url }} --site-name={{ drupal_site_name }} {{ drupal_extra_install_params }} -y"
+  args:
+    chdir: "{{ root_dir }}/{{ drupal_folder_name }}"
+  when: drupal_install == "yes" and drupal_app_installed.stdout.find("Successful") == -1
+
+- name: Configure nginx virtualhost
+  when: webserver == "nginx"
+  template: src=drupal.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
+  notify: restart nginx
+
+#- name: Configure apache virtualhost
+#  when: webserver == "apache"
+#  template: src=drupal.apache.conf dest=/etc/apache2/sites-enabled/{{hostname}}.conf
+#  notify: restart apache

@@ -11,3 +11,14 @@
     - { role: database, vendor: mariadb }
     - { role: common/host, hostname: drupal.example.com }
     - { role: dev/phpmyadmin, configure: nginx }
+    - { role: apps/drupal,
+            hostname: "mysite.com",
+            root_dir: "/vagrant",
+            drupal_version: "7.34",
+            database: drupal,
+            webserver: nginx,
+            drupal_install: "yes",
+            drupal_db_url: "mysql://root:root@localhost/drupal"
+
+      }
+

@@ -1,0 +1,10 @@
+drupal_version: "7.34"
+drupal_folder_name: drupal
+drush_options: ""
+drupal_admin_user: "admin"
+drupal_admin_pass: "admin"
+drupal_install: "yes"
+drupal_profile: "standard"
+drupal_site_name: "Drupal"
+drupal_extra_install_params: ""
+webserver: false

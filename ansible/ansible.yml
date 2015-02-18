@@ -9,7 +9,6 @@
     - { role: dev/composer }
     - { role: dev/drush }
     - { role: database, vendor: mariadb }
-    - { role: common/host, hostname: drupal.example.com }
     - { role: dev/phpmyadmin, configure: nginx }
     - { role: apps/drupal,
             hostname: "mysite.com",

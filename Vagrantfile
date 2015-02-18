@@ -17,8 +17,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   # Share an additional folder to the guest VM.
-  config.vm.synced_folder ".", "/vagrant", :nfs => true
-  
+  config.vm.synced_folder "./shared", "/vagrant", :nfs => true
+
   config.vm.provider "virtualbox" do |vb|
       # Change memory:
       vb.customize ["modifyvm", :id, "--memory", "1024"]

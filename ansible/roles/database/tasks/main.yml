@@ -1,5 +1,5 @@
 - include: mariadb.yml
-  when: vendor == "mariadb"
+  when: vendors.database == "mariadb"
 
 - include: mysql.yml
-  when: vendor == "mysql"
+  when: vendors.database == "mysql"

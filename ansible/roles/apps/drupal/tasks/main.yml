@@ -14,7 +14,7 @@
   debug: var=drupal_downloaded
 
 - name: Create the database
-  mysql_db: name={{ database }} state=present
+  mysql_db: name={{ drupal_database }} state=present
 
 - name: Add the app domain to the hosts file
   lineinfile:
@@ -40,7 +40,7 @@
   when: drupal_install == "yes" and drupal_app_installed.stdout.find("Successful") == -1
 
 - name: Configure nginx virtualhost
-  when: webserver == "nginx"
+  when: vendors.webserver == "nginx"
   template: src=drupal.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
   notify: restart nginx
 

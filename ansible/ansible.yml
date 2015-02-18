@@ -1,21 +1,26 @@
 - hosts: all
   sudo: True
   remote_user: vagrant
+  vars:
+    vm_name: testvm
+    vendors:
+      webserver: nginx
+      database: mariadb
+
   roles:
-    - { role: common, hostname: testvm }
-    - { role: webserver, web_server: nginx }
+    - { role: common }
+    - { role: webserver }
     - { role: php, version: "5.6", env: dev }
     - { role: dev/tools }
     - { role: dev/composer }
     - { role: dev/drush }
-    - { role: database, vendor: mariadb }
-    - { role: dev/phpmyadmin, configure: nginx }
+    - { role: database}
+    - { role: dev/phpmyadmin }
     - { role: apps/drupal,
             hostname: "mysite.com",
             root_dir: "/vagrant",
             drupal_version: "7.34",
-            database: drupal,
-            webserver: nginx,
+            drupal_database: drupal,
             drupal_install: "yes",
             drupal_db_url: "mysql://root:root@localhost/drupal"
 

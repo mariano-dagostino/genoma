@@ -1,5 +1,5 @@
 - name: Add a host entry in /etc/hosts
   lineinfile:
     dest=/etc/hosts
-    line='{{ ip | default("127.0.0.1") }} {{ hostname }}'
+    line='{{ ip | default("127.0.0.1") }} {{ vm_name }}'
     state=present

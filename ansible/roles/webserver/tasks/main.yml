@@ -1,6 +1,6 @@
 - include: nginx.yml
-  when: web_server == "nginx"
+  when: vendors.webserver == "nginx"
 
 - include: apache.yml
-  when: web_server == "apache"
+  when: vendors.webserver == "apache"
 

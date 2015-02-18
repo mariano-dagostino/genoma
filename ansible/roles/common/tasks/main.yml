@@ -8,11 +8,11 @@
   apt: upgrade=full
 
 - name: Change the hostname
-  hostname: name={{ hostname }}
+  hostname: name={{ vm_name }}
   register: hostname_set
 
 - name: Set the hostname in the /etc/host
-  lineinfile: dest=/etc/hosts line='127.0.0.1 {{ hostname }}'
+  lineinfile: dest=/etc/hosts line='127.0.0.1 {{ vm_name }}'
   when: hostname_set.changed
 
 - include: git.yml

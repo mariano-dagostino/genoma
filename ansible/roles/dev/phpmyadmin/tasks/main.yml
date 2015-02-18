@@ -2,6 +2,6 @@
   apt: name=phpmyadmin
 
 - name: Configure PHPMyadmin for nginx
-  when: configure == 'nginx'
+  when: vendors.webserver == 'nginx'
   copy: src=phpmyadmin.nginx.conf dest=/etc/nginx/sites-enabled/phpmyadmin.nginx.conf
   notify: restart nginx

@@ -8,3 +8,4 @@ drupal_profile: "standard"
 drupal_site_name: "Drupal"
 drupal_extra_install_params: ""
 webserver: false
+debug: false

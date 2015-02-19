@@ -24,12 +24,18 @@
   register: drupal_app_installed
   when: drupal_install == "yes" and (drupal_installed.stat.exists == true or drupal_downloaded.stderr.find("downloaded to") != -1)
   changed_when: false
+  failed_when: false
 
 - name: Install drupal app
   command: "drush si {{ drupal_profile }} --account-name={{ drupal_admin_user }} --account-pass={{ drupal_admin_pass }} --db-url={{ drupal_db_url }} --site-name={{ drupal_site_name }} {{ drupal_extra_install_params }} -y"
   args:
     chdir: "{{ root_dir }}"
   when: drupal_install == "yes" and drupal_app_installed.stdout.find("Successful") == -1
+  register: drupal_install_output
+
+- name: Debug install output
+  debug: var=drupal_install_output
+  when: debug
 
 - name: Configure nginx virtualhost
   when: vendors.webserver == "nginx"

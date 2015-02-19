@@ -18,9 +18,8 @@
     - { role: dev/phpmyadmin }
     - { role: apps/drupal,
             hostname: "mysite.com",
-            root_dir: "/vagrant",
+            root_dir: "/vagrant/drupal",
             drupal_version: "7.34",
-            drupal_database: drupal,
             drupal_install: "yes",
             drupal_db_url: "mysql://root:root@localhost/drupal"
 

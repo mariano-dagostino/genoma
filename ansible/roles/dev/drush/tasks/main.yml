@@ -11,7 +11,7 @@
   sudo: no
 
 - name: Install drush
-  shell: composer global require drush/drush:6.*
+  shell: composer global require drush/drush:{{drush_version}}
   when: drushdir.stat.exists == False
   sudo: no
 

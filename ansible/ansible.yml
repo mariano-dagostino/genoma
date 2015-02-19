@@ -16,12 +16,21 @@
     - { role: dev/drush }
     - { role: database}
     - { role: dev/phpmyadmin }
+
     - { role: apps/drupal,
-            hostname: "mysite.com",
-            root_dir: "/vagrant/drupal",
+            hostname: "drupal7.mysite.com",
+            root_dir: "/vagrant/drupal7",
             drupal_version: "7.34",
             drupal_install: "yes",
-            drupal_db_url: "mysql://root:root@localhost/drupal"
+            drupal_db_url: "mysql://root:root@localhost/drupal7"
+      }
 
+    - { role: apps/drupal,
+            hostname: "drupal8.mysite.com",
+            root_dir: "/vagrant/drupal8",
+            drupal_version: "8.0.x-dev",
+            drupal_install: "yes",
+            drupal_db_url: "mysql://root:root@localhost/drupal8",
+            debug: true
       }
 

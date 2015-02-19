@@ -1,0 +1,20 @@
+- name: Check if wp-cli is already installed
+  command: whereis wp
+  register: wp_path
+  changed_when: false
+
+- name: Install wp-cli
+  command: "{{ item }}"
+  with_items:
+    - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    - chmod u+x wp-cli.phar
+  when: wp_path.stdout == 'wp:'
+  sudo: no
+  args:
+      chdir: /tmp
+
+- name: Make wp-cli globally available
+  command: mv wp-cli.phar /usr/bin/wp
+  when: wp_path.stdout == 'wp:'
+  args:
+      chdir: /tmp

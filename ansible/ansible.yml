@@ -33,4 +33,5 @@
             drupal_db_url: "mysql://root:root@localhost/drupal8",
             debug: true
       }
+    - { role: dev/wpcli }
 

@@ -1,2 +1,0 @@
-[vm]
-192.168.55.10 ansible_ssh_user=vagrant

@@ -42,7 +42,7 @@
   template: src=drupal.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
   notify: restart nginx
 
-#- name: Configure apache virtualhost
-#  when: webserver == "apache"
-#  template: src=drupal.apache.conf dest=/etc/apache2/sites-enabled/{{hostname}}.conf
-#  notify: restart apache
+- name: Configure apache virtualhost
+  when: vendors.webserver == "apache"
+  template: src=drupal.apache.conf.j2 dest=/etc/apache2/sites-enabled/{{hostname}}.conf
+  notify: restart apache

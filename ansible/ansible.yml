@@ -4,7 +4,7 @@
   vars:
     vm_name: testvm
     vendors:
-      webserver: nginx
+      webserver: apache
       database: mariadb
 
   roles:

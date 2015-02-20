@@ -14,9 +14,19 @@
 
 - name: Install PHP packages
   apt: name={{item}}
+  when: vendors.webserver == 'nginx'
   with_items:
     - php5
     - php5-fpm
+    - php5-gd
+    - php5-dev
+    - php5-cli
+
+- name: Install PHP packages
+  apt: name={{item}}
+  when: vendors.webserver == 'apache'
+  with_items:
+    - php5
     - php5-gd
     - php5-dev
     - php5-cli

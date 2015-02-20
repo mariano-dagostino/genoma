@@ -7,6 +7,23 @@
 - include: php56.yml
   when: version == "5.6"
 
+- name: Ensure PHP is enabled for apache
+  when: vendors.webserver == "apache"
+  lineinfile:
+      dest=/etc/apache2/mods-enabled/mime.conf
+      insertbefore="</IfModule>"
+      line="{{ item.line }}"
+      state=present
+  with_items:
+      - { line: "AddType  application/x-httpd-php         .php"  }
+      - { line: "AddType  application/x-httpd-php-source  .phps" }
+  notify:
+    - restart apache
+
+- name: Enable PHP module for apache
+  when: vendors.webserver == "apache"
+  apache2_module: state=present name=php5
+
 # Configure PHP for development
 - include: php56dev.yml
   when: env == "dev"

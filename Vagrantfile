@@ -18,6 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Share an additional folder to the guest VM.
   config.vm.synced_folder "./shared", "/vagrant", :nfs => true
+  config.vm.synced_folder "./ansible", "/provisioning", :nfs => true
 
   config.vm.provider "virtualbox" do |vb|
       # Change memory:

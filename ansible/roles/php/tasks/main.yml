@@ -27,3 +27,18 @@
 # Configure PHP for development
 - include: php56dev.yml
   when: env == "dev"
+
+- name: Config timezone for PHP and restart apache
+  action: ini_file dest=/etc/php5/apache2/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600
+  when: vendors.webserver == "apache"
+  notify:
+    - restart apache
+
+- name: Config timezone for PHP and restart nginx
+  action: ini_file dest=/etc/php5/fpm/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600
+  when: vendors.webserver == "nginx"
+  notify:
+    - restart nginx
+
+- name: Config timezone for PHP for cli
+  action: ini_file dest=/etc/php5/cli/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600

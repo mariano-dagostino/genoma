@@ -1,0 +1,13 @@
+- name: Check if the Wordpress App is already created
+  stat: path={{ root_dir }}
+  register: wordpress_installed
+
+- name: Download latest Wordpress version
+  command: "wp core download --path={{ root_dir }} --locale={{ wordpress_locale }}"
+  sudo: no
+  when: wordpress_installed.stat.exists == false and wordpress_version is not defined
+
+- name: Download specific Wordpress version
+  sudo: no
+  command: wp core download --version="{{  wordpress_version }}" --path={{ root_dir }} --locale="{{ wordpress_locale }}"
+  when: wordpress_installed.stat.exists == false and wordpress_version is defined

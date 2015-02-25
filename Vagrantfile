@@ -25,8 +25,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
+  # If you have ansible installed on your machine, uncomment the following three
+  # lines to provision the machine using "vagrant provision".
+  #config.vm.provision "ansible" do |ansible|
+  #  ansible.playbook = "ansible/ansible.yml"
+  #end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "ansible/ansible.yml"
-  end
+  # If you don't have ansible installed or you want to run ansible only in the
+  # guest machine run the following commands:
+  # vagrant up
+  # vagrant ssh
+  # /provisioning/run
 end

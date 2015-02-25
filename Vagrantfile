@@ -16,9 +16,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Default value: false
   config.ssh.forward_agent = true
 
+  # Set this variable to true to enable NFS synced folders.
+  use_nfs = false
+
   # Share an additional folder to the guest VM.
-  config.vm.synced_folder "./shared", "/vagrant", :nfs => true
-  config.vm.synced_folder "./ansible", "/provisioning", :nfs => true
+  config.vm.synced_folder "./shared", "/vagrant", :nfs => use_nfs
+  config.vm.synced_folder "./ansible", "/provisioning", :nfs => use_nfs
 
   config.vm.provider "virtualbox" do |vb|
       # Change memory:
@@ -31,8 +34,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #  ansible.playbook = "ansible/ansible.yml"
   #end
 
-  # If you don't have ansible installed or you want to run ansible only in the
-  # guest machine run the following commands:
+  # If you don't have ansible installed or if you want to run ansible only in
+  # the guest machine run the following commands:
   # vagrant up
   # vagrant ssh
   # /provisioning/run

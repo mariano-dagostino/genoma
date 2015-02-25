@@ -40,7 +40,7 @@
   when: install_amix and vim_ansible_configured.stat.exists == false
 
 - name: Fix syntax color for ansible files on vim (uncompress the plugin)
-  unarchive: src=~/.vim_runtime/sources_non_forked/vim-ansible-yaml.zip copy=no
+  unarchive: src=~/.vim_runtime/sources_non_forked/vim-ansible-yaml.zip dest=~/.vim_runtime/sources_non_forked copy=no
   sudo: no
   when: vim_ansible_downloaded.changed
 

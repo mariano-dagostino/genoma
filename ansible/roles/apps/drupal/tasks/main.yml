@@ -1,4 +1,4 @@
-- name: Check if the Drupal App is already downloaded
+- name: Check if the Drupal App {{ hostname }} is already downloaded
   stat: path={{ root_dir }}
   register: app_downloaded
 
@@ -7,17 +7,17 @@
   when: app_downloaded.stat.exists == false
   register: downloaded
 
-- name: Create the database
+- name: Create the database for {{ hostname }}
   mysql_db: name="{{ db_url | basename }}" state=present
   register: db_created
 
-- name: Add the app domain to the hosts file
+- name: Add {{ hostname }} to the hosts file
   lineinfile:
     dest=/etc/hosts
     line="127.0.0.1 {{ hostname }}"
     state=present
 
-- name: Check if the app is already installed
+- name: Check if the app {{ hostname }} is already installed
   command: "drush core-status --fields=bootstrap"
   args:
     chdir: "{{ root_dir }}"
@@ -26,7 +26,7 @@
   changed_when: false
   failed_when: false
 
-- name: Install drupal app
+- name: Install drupal app {{ hostname }}
   command: "drush si {{ profile }} --account-name={{ admin_user }} --account-pass={{ admin_pass }} --db-url={{ db_url }} --site-name={{ site_name }} {{ extra_install_params }} -y"
   args:
     chdir: "{{ root_dir }}"
@@ -38,12 +38,12 @@
   debug: var=install_output
   when: debug
 
-- name: Configure nginx virtualhost
+- name: Configure nginx virtualhost for {{ hostname }}
   when: vendors.webserver == "nginx"
   template: src=drupal.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
   notify: restart nginx
 
-- name: Configure apache virtualhost
+- name: Configure apache virtualhost for {{ hostname }}
   when: vendors.webserver == "apache"
   template: src=drupal.apache.conf.j2 dest=/etc/apache2/sites-enabled/{{hostname}}.conf
   notify: restart apache

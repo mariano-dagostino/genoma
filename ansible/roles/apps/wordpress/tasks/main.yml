@@ -1,33 +1,33 @@
-- name: Check if the Wordpress App is already created
+- name: Check if the Wordpress App {{ hostname }} is already created
   stat: path={{ root_dir }}
   register: app_downloaded
 
-- name: Download latest Wordpress version
+- name: Download latest Wordpress version for {{ hostname }}
   command: "wp core download --path={{ root_dir }} --locale={{ locale }}"
   sudo: no
   when: app_downloaded.stat.exists == false and wordpress_version == false
 
-- name: Download specific Wordpress version
+- name: Download specific Wordpress version for {{ hostname }}
   sudo: no
   command: wp core download --version="{{  version }}" --path={{ root_dir }} --locale="{{ locale }}"
   when: app_downloaded.stat.exists == false and wordpress_version != false
 
-- name: Create the database for Wordpress
+- name: Create the database for Wordpress app {{ hostname }}
   mysql_db: name="{{ database_name }}" state=present
   register: db_created
 
-- name: Check if the Wordpress App is already configured
+- name: Check if the Wordpress App {{ hostname }} is already configured
   stat: path={{ root_dir }}/wp-config.php
   register: wordpress_configured
 
-- name: Define Wordpress config.php values
+- name: Define Wordpress config.php values for {{ hostname }}
   sudo: no
   command: wp core config {{ extra_config }} --dbname="{{ database_name }}" --dbuser="{{ database_user }}" --dbpass="{{ database_pass }}" --dbhost="{{ database_host }}"
   when: wordpress_configured.stat.exists == false
   args:
     chdir: "{{ root_dir }}"
 
-- name: Install wordpress app
+- name: Install wordpress app {{ hostname }}
   sudo: no
   command: "wp core install --url={{ hostname }} --title={{  site_name }} --admin_user={{ admin_user }} --admin_password={{ admin_pass }} --admin_email={{ admin_email }}"
   args:
@@ -37,18 +37,18 @@
   register: app_installed
   changed_when: app_installed.stdout.find('Success') != -1
 
-- name: Add the app domain to the hosts file
+- name: Add {{ hostname }} to the hosts file
   lineinfile:
     dest=/etc/hosts
     line="127.0.0.1 {{ hostname }}"
     state=present
 
-- name: Configure nginx virtualhost
+- name: Configure nginx virtualhost for {{ hostname }}
   when: vendors.webserver == "nginx"
   template: src=wordpress.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
   notify: restart nginx
 
-- name: Configure apache virtualhost
+- name: Configure apache virtualhost for {{ hostname }}
   when: vendors.webserver == "apache"
   template: src=wordpress.apache.conf.j2 dest=/etc/apache2/sites-enabled/{{hostname}}.conf
   notify: restart apache

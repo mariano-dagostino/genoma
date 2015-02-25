@@ -1,17 +1,18 @@
 - name: Check if the Wordpress App is already created
   stat: path={{ root_dir }}
-  register: wordpress_installed
+  register: app_downloaded
 
 - name: Download latest Wordpress version
-  command: "wp core download --path={{ root_dir }} --locale={{ wordpress_locale }}"
+  command: "wp core download --path={{ root_dir }} --locale={{ locale }}"
   sudo: no
-  when: wordpress_installed.stat.exists == false and wordpress_version == false
+  when: app_downloaded.stat.exists == false and wordpress_version == false
+
 - name: Download specific Wordpress version
   sudo: no
-  command: wp core download --version="{{  wordpress_version }}" --path={{ root_dir }} --locale="{{ wordpress_locale }}"
-  when: wordpress_installed.stat.exists == false and wordpress_version != false
+  command: wp core download --version="{{  version }}" --path={{ root_dir }} --locale="{{ locale }}"
+  when: app_downloaded.stat.exists == false and wordpress_version != false
 
-- name: Create the database
+- name: Create the database for Wordpress
   mysql_db: name="{{ database_name }}" state=present
   register: db_created
 
@@ -19,7 +20,7 @@
   stat: path={{ root_dir }}/wp-config.php
   register: wordpress_configured
 
-- name: Define config.php values
+- name: Define Wordpress config.php values
   sudo: no
   command: wp core config {{ extra_config }} --dbname="{{ database_name }}" --dbuser="{{ database_user }}" --dbpass="{{ database_pass }}" --dbhost="{{ database_host }}"
   when: wordpress_configured.stat.exists == false
@@ -28,11 +29,13 @@
 
 - name: Install wordpress app
   sudo: no
-  command: "wp core install --url={{ hostname }} --title={{  wordpress_site_name }} --admin_user={{ wordpress_admin_user }} --admin_password={{  wordpress_admin_pass }} --admin_email={{ wordpress_admin_email }}"
+  command: "wp core install --url={{ hostname }} --title={{  site_name }} --admin_user={{ admin_user }} --admin_password={{ admin_pass }} --admin_email={{ admin_email }}"
   args:
     chdir: "{{ root_dir }}"
   # If the config file doesn't in the last check, then it was created in the previous step
-  when: wordpress_install == "yes" and wordpress_configured.stat.exists == false
+  when: install == "yes"
+  register: app_installed
+  changed_when: app_installed.stdout.find('Success') != -1
 
 - name: Add the app domain to the hosts file
   lineinfile:

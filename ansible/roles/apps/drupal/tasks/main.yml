@@ -1,14 +1,14 @@
-- name: Check if the Drupal App is already created
+- name: Check if the Drupal App is already downloaded
   stat: path={{ root_dir }}
-  register: drupal_installed
+  register: app_downloaded
 
 - name: Download drupal
-  command: "drush dl drupal-{{ drupal_version }} --destination={{ root_dir | dirname }} --drupal-project-rename={{ root_dir | basename }} {{ drush_options }} -y"
-  when: drupal_installed.stat.exists == false
-  register: drupal_downloaded
+  command: "drush dl drupal-{{ version }} --destination={{ root_dir | dirname }} --drupal-project-rename={{ root_dir | basename }} {{ drush_options }} -y"
+  when: app_downloaded.stat.exists == false
+  register: downloaded
 
 - name: Create the database
-  mysql_db: name="{{ drupal_db_url | basename }}" state=present
+  mysql_db: name="{{ db_url | basename }}" state=present
   register: db_created
 
 - name: Add the app domain to the hosts file
@@ -21,20 +21,20 @@
   command: "drush core-status --fields=bootstrap"
   args:
     chdir: "{{ root_dir }}"
-  register: drupal_app_installed
-  when: drupal_install == "yes" and (drupal_installed.stat.exists == true or drupal_downloaded.stderr.find("downloaded to") != -1)
+  register: app_installed
+  when: install == "yes" and (app_downloaded.stat.exists == true or downloaded.stderr.find("downloaded to") != -1)
   changed_when: false
   failed_when: false
 
 - name: Install drupal app
-  command: "drush si {{ drupal_profile }} --account-name={{ drupal_admin_user }} --account-pass={{ drupal_admin_pass }} --db-url={{ drupal_db_url }} --site-name={{ drupal_site_name }} {{ drupal_extra_install_params }} -y"
+  command: "drush si {{ profile }} --account-name={{ admin_user }} --account-pass={{ admin_pass }} --db-url={{ db_url }} --site-name={{ site_name }} {{ extra_install_params }} -y"
   args:
     chdir: "{{ root_dir }}"
-  when: drupal_install == "yes" and drupal_app_installed.stdout.find("Successful") == -1
-  register: drupal_install_output
+  when: install == "yes" and app_installed.stdout.find("Successful") == -1
+  register: install_output
 
 - name: Debug install output
-  debug: var=drupal_install_output
+  debug: var=install_output
   when: debug
 
 - name: Configure nginx virtualhost

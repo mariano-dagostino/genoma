@@ -1,0 +1,28 @@
+#! /bin/sh
+
+if ! hash ansible-playbook 2>/dev/null; then
+    # Install git
+    sudo apt-get update
+    sudo apt-get upgrade -y
+    sudo apt-get install git-core python python-dev -y
+
+    # Install easy_install
+    wget http://peak.telecommunity.com/dist/ez_setup.py -O /tmp/ez_setup.py
+    sudo python /tmp/ez_setup.py
+    sudo easy_install pip
+    rm ez_setup.py
+
+    # Install PIP
+    sudo easy_install pip
+
+    # Install Ansible dependencies
+    sudo pip install paramiko PyYAML Jinja2 httplib2
+
+    # Install Ansible
+    sudo pip install ansible
+else
+    echo "Ansible is already installed"
+fi
+
+PROVISIONING_DIR=$(cd $(dirname "$0"); pwd)
+ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local

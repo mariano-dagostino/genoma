@@ -26,6 +26,24 @@
   sudo: no
   when: install_amix and vim_configured.stat.exists == False
 
+- name: Check if chase/vim-ansible-yaml is already present
+  stat: path=~/.vim_runtime/sources_non_forked/vim-ansible-yaml
+  register: vim_ansible_configured
+  changed_when: False
+  sudo: no
+  when: install_amix
+
+- name: Fix syntax color for ansible files on vim (download the plugin)
+  get_url: url="https://github.com/chase/vim-ansible-yaml/archive/master.zip" dest=~/.vim_runtime/sources_non_forked/vim-ansible-yaml.zip
+  sudo: no
+  register: vim_ansible_downloaded
+  when: install_amix and vim_ansible_configured.stat.exists == false
+
+- name: Fix syntax color for ansible files on vim (uncompress the plugin)
+  unarchive: src=~/.vim_runtime/sources_non_forked/vim-ansible-yaml.zip copy=no
+  sudo: no
+  when: vim_ansible_downloaded.changed
+
 - name: Install zsh
   apt: name=zsh state=present
   when: install_ohmyzsh

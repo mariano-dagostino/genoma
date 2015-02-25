@@ -15,9 +15,14 @@
   mysql_db: name="{{ database_name }}" state=present
   register: db_created
 
+- name: Check if the Wordpress App is already configured
+  stat: path={{ root_dir }}/wp-config.php
+  register: wordpress_configured
+
 - name: Define config.php values
   sudo: no
   command: wp core config {{ extra_config }} --dbname="{{ database_name }}" --dbuser="{{ database_user }}" --dbpass="{{ database_pass }}" --dbhost="{{ database_host }}"
+  when: wordpress_configured.stat.exists == false
   args:
     chdir: "{{ root_dir }}"
 
@@ -26,7 +31,8 @@
   command: "wp core install --url={{ hostname }} --title={{  wordpress_site_name }} --admin_user={{ wordpress_admin_user }} --admin_password={{  wordpress_admin_pass }} --admin_email={{ wordpress_admin_email }}"
   args:
     chdir: "{{ root_dir }}"
-  when: wordpress_install == "yes"
+  # If the config file doesn't in the last check, then it was created in the previous step
+  when: wordpress_install == "yes" and wordpress_configured.stat.exists == false
 
 - name: Add the app domain to the hosts file
   lineinfile:

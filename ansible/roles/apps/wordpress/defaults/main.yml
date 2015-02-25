@@ -1,1 +1,11 @@
 wordpress_locale: "en_US"
+wordpress_version: false
+wordpress_admin_user: "admin"
+wordpress_admin_pass: "admin"
+wordpress_admin_email: "admin@example.com"
+wordpress_install: "yes"
+wordpress_site_name: "Wordpress"
+database_host: "localhost"
+extra_config: ""
+webserver: false
+debug: false

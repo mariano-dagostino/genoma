@@ -5,9 +5,41 @@
 - name: Download latest Wordpress version
   command: "wp core download --path={{ root_dir }} --locale={{ wordpress_locale }}"
   sudo: no
-  when: wordpress_installed.stat.exists == false and wordpress_version is not defined
-
+  when: wordpress_installed.stat.exists == false and wordpress_version == false
 - name: Download specific Wordpress version
   sudo: no
   command: wp core download --version="{{  wordpress_version }}" --path={{ root_dir }} --locale="{{ wordpress_locale }}"
-  when: wordpress_installed.stat.exists == false and wordpress_version is defined
+  when: wordpress_installed.stat.exists == false and wordpress_version != false
+
+- name: Create the database
+  mysql_db: name="{{ database_name }}" state=present
+  register: db_created
+
+- name: Define config.php values
+  sudo: no
+  command: wp core config {{ extra_config }} --dbname="{{ database_name }}" --dbuser="{{ database_user }}" --dbpass="{{ database_pass }}" --dbhost="{{ database_host }}"
+  args:
+    chdir: "{{ root_dir }}"
+
+- name: Install wordpress app
+  sudo: no
+  command: "wp core install --url={{ hostname }} --title={{  wordpress_site_name }} --admin_user={{ wordpress_admin_user }} --admin_password={{  wordpress_admin_pass }} --admin_email={{ wordpress_admin_email }}"
+  args:
+    chdir: "{{ root_dir }}"
+  when: wordpress_install == "yes"
+
+- name: Add the app domain to the hosts file
+  lineinfile:
+    dest=/etc/hosts
+    line="127.0.0.1 {{ hostname }}"
+    state=present
+
+- name: Configure nginx virtualhost
+  when: vendors.webserver == "nginx"
+  template: src=wordpress.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
+  notify: restart nginx
+
+- name: Configure apache virtualhost
+  when: vendors.webserver == "apache"
+  template: src=wordpress.apache.conf.j2 dest=/etc/apache2/sites-enabled/{{hostname}}.conf
+  notify: restart apache

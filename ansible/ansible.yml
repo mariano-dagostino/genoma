@@ -35,3 +35,10 @@
       }
     - { role: dev/wpcli }
 
+    - { role: apps/wordpress,
+           hostname: "wp.mysite.com",
+           root_dir: "/vagrant/wp",
+           database_name: "wp",
+           database_user: "root",
+           database_pass: "root",
+       }

@@ -20,17 +20,17 @@
     - { role: apps/drupal,
             hostname: "drupal7.mysite.com",
             root_dir: "/vagrant/drupal7",
-            drupal_version: "7.34",
-            drupal_install: "yes",
-            drupal_db_url: "mysql://root:root@localhost/drupal7"
+            version: "7.34",
+            install: "yes",
+            db_url: "mysql://root:root@localhost/drupal7"
       }
 
     - { role: apps/drupal,
             hostname: "drupal8.mysite.com",
             root_dir: "/vagrant/drupal8",
-            drupal_version: "8.0.x-dev",
-            drupal_install: "yes",
-            drupal_db_url: "mysql://root:root@localhost/drupal8",
+            version: "8.0.x-dev",
+            install: "yes",
+            db_url: "mysql://root:root@localhost/drupal8",
             debug: true
       }
     - { role: dev/wpcli }

@@ -1,3 +1,7 @@
+- name: Check requirements
+  fail: msg="Only debian based box are supported at this moment. You are currently using {{ ansible_os_family }}"
+  when: ansible_os_family != "Debian"
+
 - name: Upgrade repo info. # Run only if didn't run in the last hour.
   apt: update_cache=yes cache_valid_time=3600
 

@@ -1,11 +1,15 @@
 - name: Configure Proxy globally
   lineinfile: dest={{ item }} line='http_proxy={{ proxy }}'
   with_items:
-    - /etc/wget
+    - /etc/wget.conf
     - /etc/environment
 
 - name: Configure Proxy for wget
   command: "export http_proxy {{ proxy }}"
 
 - name: Configure Proxy for apt
-  lineinfile:  dest=/etc/apt/apt.conf line='http_proxy={{ proxy }}' create=yes
+  lineinfile:  dest=/etc/apt/apt.conf line='{{ item }}' create=yes
+  with_items:
+  - 'Acquire::http::proxy "{{ proxy }};"'
+  - 'Acquire::ftp::proxy "{{ proxy }}";'
+  - 'Acquire::https::proxy "{{ proxy }}";'

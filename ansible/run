@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# If you are using a proxy server, uncomment the next line
+# export {http,https,ftp}_proxy='http://username:password@host:3128'
+
 if ! hash ansible-playbook 2>/dev/null; then
     # Install git
     sudo apt-get update

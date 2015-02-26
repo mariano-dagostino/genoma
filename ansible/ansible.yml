@@ -18,7 +18,7 @@
     - { role: dev/phpmyadmin }
 
     - { role: apps/drupal,
-            hostname: "drupal7.mysite.com",
+            hostname: "drupal7.example.com",
             root_dir: "/vagrant/drupal7",
             version: "7.34",
             install: "yes",
@@ -26,7 +26,7 @@
       }
 
     - { role: apps/drupal,
-            hostname: "drupal8.mysite.com",
+            hostname: "drupal8.example.com",
             root_dir: "/vagrant/drupal8",
             version: "8.0.x-dev",
             install: "yes",
@@ -36,7 +36,7 @@
     - { role: dev/wpcli }
 
     - { role: apps/wordpress,
-           hostname: "wp.mysite.com",
+           hostname: "wp.example.com",
            root_dir: "/vagrant/wp",
            database_name: "wp",
            database_user: "root",

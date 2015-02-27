@@ -4,7 +4,7 @@
     - python-software-properties
 
 - name: Add apt key for MariaDB
-  apt_key: keyserver=keyserver.ubuntu.com id=0xcbcb082a1bb943db state=present
+  apt_key: keyserver=keyserver.ubuntu.com:80 id=0xcbcb082a1bb943db state=present
   environment:
     http_proxy: "{{ proxy }}"
 

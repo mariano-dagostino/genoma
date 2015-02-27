@@ -2,7 +2,7 @@
   stat: path={{ root_dir }}
   register: app_downloaded
 
-- name: Download drupal
+- name: Download drupal {{ version }}
   command: "drush dl drupal-{{ version }} --destination={{ root_dir | dirname }} --drupal-project-rename={{ root_dir | basename }} {{ drush_options }} -y"
   when: app_downloaded.stat.exists == false
   register: downloaded

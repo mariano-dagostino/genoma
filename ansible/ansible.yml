@@ -28,7 +28,7 @@
     - { role: apps/drupal,
             hostname: "drupal8.example.com",
             root_dir: "/vagrant/drupal8",
-            version: "8.0.x-dev",
+            version: "8.0.0-beta7",
             install: "yes",
             db_url: "mysql://root:root@localhost/drupal8",
             debug: true

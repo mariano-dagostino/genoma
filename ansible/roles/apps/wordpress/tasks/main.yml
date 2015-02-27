@@ -5,12 +5,12 @@
 - name: Download latest Wordpress version for {{ hostname }}
   command: "wp core download --path={{ root_dir }} --locale={{ locale }}"
   sudo: no
-  when: app_downloaded.stat.exists == false and wordpress_version == false
+  when: app_downloaded.stat.exists == false and version == false
 
 - name: Download specific Wordpress version for {{ hostname }}
   sudo: no
   command: wp core download --version="{{  version }}" --path={{ root_dir }} --locale="{{ locale }}"
-  when: app_downloaded.stat.exists == false and wordpress_version != false
+  when: app_downloaded.stat.exists == false and version != false
 
 - name: Create the database for Wordpress app {{ hostname }}
   mysql_db: name="{{ database_name }}" state=present

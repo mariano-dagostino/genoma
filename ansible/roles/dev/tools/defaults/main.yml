@@ -1,3 +1,4 @@
+git_protocol: "git://"
 install_vim: true
 install_amix: true
 install_ohmyzsh: true

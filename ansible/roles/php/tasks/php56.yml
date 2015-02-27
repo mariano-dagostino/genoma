@@ -7,6 +7,8 @@
 - name: Add dotdeb keys
   apt_key: url=http://www.dotdeb.org/dotdeb.gpg
   register: dotdeb_key
+  environment:
+    http_proxy: "{{ proxy }}"
 
 - name: Update APT cache
   when: dotdeb_key.changed

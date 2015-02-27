@@ -1,7 +1,14 @@
 #! /bin/bash
 
 # If you are using a proxy server, uncomment the next line
-# export {http,https,ftp}_proxy='http://username:password@host:3128'
+# PROXY='http://username:password@host:3128'
+
+# Some firewalls block the git:// protocol, you can change it here (usually to https://)
+GIT_PROTOCOL = "git://"
+
+if [ -n "${PROXY+1}" ]; then
+  export {http,https,ftp}_proxy= $PROXY
+fi
 
 if ! hash ansible-playbook 2>/dev/null; then
     # Install git
@@ -28,4 +35,9 @@ else
 fi
 
 PROVISIONING_DIR=$(cd $(dirname "$0"); pwd)
-ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local
+
+if [ -z ${PROXY+x} ]; then
+  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local --extra-vars "git_protocol=$GIT_PROTOCOL"
+else
+  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local --extra-vars "proxy=$PROXY git_protocol=$GIT_PROTOCOL"
+fi

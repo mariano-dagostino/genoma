@@ -1,8 +1,9 @@
 - name: Configure Proxy globally
-  lineinfile: dest={{ item }} line='http_proxy={{ proxy }}'
+  lineinfile: dest={{ item }} line='http_proxy={{ proxy }}' state=present
   with_items:
-    - /etc/wgetrc
-    - /etc/environment
+    - "/etc/wgetrc"
+    - "/etc/environment"
+    - "/etc/bash.bashrc"
 
     - name: Configure Proxy for apt
   lineinfile:  dest=/etc/apt/apt.conf line='{{ item }}' create=yes

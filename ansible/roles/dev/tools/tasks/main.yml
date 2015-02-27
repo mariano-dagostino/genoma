@@ -21,7 +21,7 @@
 - name: Make Vim easier to use (install amix/vim)
   shell: "{{item}}"
   with_items:
-    - git clone "{{ git_protocol }}github.com/amix/vimrc.git ~/.vim_runtime"
+    - "git clone {{ git_protocol }}github.com/amix/vimrc.git ~/.vim_runtime"
     - sh ~/.vim_runtime/install_awesome_vimrc.sh
   sudo: no
   when: install_amix and vim_configured.stat.exists == False

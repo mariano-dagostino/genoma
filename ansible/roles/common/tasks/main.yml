@@ -3,7 +3,7 @@
   when: ansible_os_family != "Debian"
 
 - name: Proxy configurations
-  when: proxy != false
+  when: proxy is defined
   include: proxy.yml
 
 - name: Upgrade repo info. # Run only if didn't run in the last hour.

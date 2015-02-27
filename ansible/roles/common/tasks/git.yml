@@ -7,7 +7,7 @@
 
 - name: Configure git to work with proxy
   command: "git config --global {{ item }} {{ proxy }}"
-  when: proxy is defined
+  when: proxy is defined and proxy != ""
   with_items:
     - "http.proxy"
     - "https.proxy"

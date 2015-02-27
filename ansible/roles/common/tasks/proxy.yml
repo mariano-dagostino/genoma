@@ -1,6 +1,6 @@
 - name: Configure Proxy globally
   lineinfile: dest={{ item[0] }} line='{{ item[1] }}={{ proxy }}' state=present
-  with_items:
+  with_nested:
     - ["/etc/wgetrc", "/etc/environment", "/etc/bash.bashrc"]
     - [ "http_proxy", "https_proxy", "ftp_proxy" ]
 

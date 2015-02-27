@@ -7,6 +7,7 @@
   shell: curl -sS https://getcomposer.org/installer | php
   when: composer_path.stdout == 'composer:'
   register: composer_downloaded
+  sudo: no
   args:
     chdir: /tmp
 

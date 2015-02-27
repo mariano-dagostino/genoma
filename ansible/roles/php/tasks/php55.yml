@@ -20,6 +20,7 @@
     - php5-fpm
     - php5-gd
     - php5-dev
+    - php5-curl
     - php-apc
 
 - name: Install PHP packages
@@ -30,4 +31,6 @@
     - php5-gd
     - php5-dev
     - php5-cli
+    - php5-curl
+    - php-apc
 

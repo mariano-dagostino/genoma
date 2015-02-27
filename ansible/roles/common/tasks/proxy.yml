@@ -5,7 +5,7 @@
     - "/etc/environment"
     - "/etc/bash.bashrc"
 
-    - name: Configure Proxy for apt
+- name: Configure Proxy for apt
   lineinfile:  dest=/etc/apt/apt.conf line='{{ item }}' create=yes
   with_items:
   - 'Acquire::http::proxy "{{ proxy }}";'

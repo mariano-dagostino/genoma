@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # If you are using a proxy server, uncomment the next line
-# PROXY='http://username:password@host:3128'
+# PROXY="http://username:password@host:3128"
 
 # Some firewalls block the git:// protocol, you can change it here (usually to https://)
-GIT_PROTOCOL = "git://"
+GIT_PROTOCOL="git://"
 
 if [ -n "${PROXY+1}" ]; then
   export {http,https,ftp}_proxy= $PROXY

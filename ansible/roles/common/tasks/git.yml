@@ -4,3 +4,10 @@
 - name: Define git aliases
   copy: src=.gitconfig dest=~
   sudo: no
+
+- name: Configure git to work with proxy
+  command: "git config --global {{ item }} {{ proxy }}"
+  when: proxy is defined
+  with_items:
+    - "http.proxy"
+    - "https.proxy"

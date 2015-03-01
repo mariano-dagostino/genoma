@@ -1,0 +1,36 @@
+- hosts: all
+  sudo: True
+  remote_user: vagrant
+  vars:
+    vm_name: testvm
+    vendors:
+      webserver: apache
+      database: mariadb
+
+  roles:
+    - { role: common }
+    - { role: webserver }
+    - { role: php, version: "5.6", env: dev }
+    - { role: dev/tools }
+    - { role: dev/composer }
+    - { role: dev/drush }
+    - { role: database}
+    - { role: dev/phpmyadmin }
+
+    - { role: apps/drupal,
+            hostname: "drupal7.example.com",
+            root_dir: "/vagrant/drupal7",
+            version: "7.34",
+            install: "yes",
+            db_url: "mysql://root:root@localhost/drupal7"
+      }
+
+    - { role: dev/wpcli }
+
+    - { role: apps/wordpress,
+           hostname: "wp.example.com",
+           root_dir: "/vagrant/wp",
+           database_name: "wp",
+           database_user: "root",
+           database_pass: "root",
+       }

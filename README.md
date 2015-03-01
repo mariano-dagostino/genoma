@@ -1,30 +1,31 @@
-#
+# Genoma
 
 ## Project Description
 
 This is a virtual machine to easily deploy different types of apps like Drupal,
-Wordpress or Laravel. It allow to choose between different web and database
+Wordpress or Laravel. It allows you to choose between different web and database
 servers by just changing a few words on a single file.
 
-It uses ansible to provision virtual machine and different pieces can be putted
-together to deploy a ready to use development environment.
+It uses ansible to provision the virtual machine and different pieces can be
+putted together to deploy a ready to use development environment.
 
-With this tool you can create could create for exaple:
+With this tool you could create for exaple:
 
-A virtual machine with: Nginx as webserver,+ MySql as database server, A site
+A virtual machine with: Nginx as webserver, MySQL as database server, A site
 running Wordpress (downloaded and installed using wp-cli) and a Drupal 7 site
 (downloaded and installed using drush).
 
 Then, just changing two words on the Ansible playbook you can install the same
-stack but using Apache as webserver and MariaDB as database server.
+stack but using Apache as webserver and MariaDB as database server, or try the
+same aplications using a different version of PHP.
 
 ## Current avilable options
 
-- Webservers: Apache 2 or nNinx
-- Database servers: MariaDB or Mysql
-- Apps: Drupal 7, Drupal 8, Wordpress 4
-- PHP Versions: 5.4, 5.5 5.6
-- PHP related tools: Composer, Drush, WP-CLI
+- Webservers: Apache 2 or Nginx.
+- Database servers: MariaDB or Mysql.
+- Apps: Drupal 7, Drupal 8, Wordpress 4.
+- PHP Versions: 5.4, 5.5 and 5.6.
+- PHP related tools: Composer, Drush, WP-CLI, PHPMyAdmin.
 - Other tools that can be installed: GIT, Oh-My-SSH, Vim with plugins.
 
 ## Planned features to be implemented
@@ -32,7 +33,7 @@ stack but using Apache as webserver and MariaDB as database server.
 - Support for PostgreSQL and Sqlite.
 - Support for Laravel Apps.
 - Support for Other linux based systems: Ubuntu Server and CentOS.
-- Support varnish, memcached and redis services.
+- Support Varnish, Memcached and Redis services.
 
 ## Example:
 

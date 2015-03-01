@@ -37,7 +37,7 @@ fi
 PROVISIONING_DIR=$(cd $(dirname "$0"); pwd)
 
 if [ -z ${PROXY+x} ]; then
-  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local --extra-vars "git_protocol=$GIT_PROTOCOL"
+  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/playbook.yml --connection=local --extra-vars "git_protocol=$GIT_PROTOCOL"
 else
-  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/ansible.yml --connection=local --extra-vars "proxy=$PROXY git_protocol=$GIT_PROTOCOL"
+  ansible-playbook -i 'localhost,' $PROVISIONING_DIR/playbook.yml --connection=local --extra-vars "proxy=$PROXY git_protocol=$GIT_PROTOCOL"
 fi

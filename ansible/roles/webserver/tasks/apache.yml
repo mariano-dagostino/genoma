@@ -1,4 +1,5 @@
 - name: Install apache2
   apt: name=apache2 state=present
 
-
+- name: Enable rewrite mod
+  apache2_module: state=present name=rewrite

@@ -33,4 +33,13 @@
            database_name: "wp",
            database_user: "root",
            database_pass: "root",
-       }
+      }
+
+    - { role: dev/laravel_installer }
+    - { role: apps/laravel,
+           hostname: "laravel.example.com",
+           root_dir: "/vagrant/laravel",
+           database_name: "laravel",
+           database_user: "lara1",
+           database_pass: "lara2",
+      }

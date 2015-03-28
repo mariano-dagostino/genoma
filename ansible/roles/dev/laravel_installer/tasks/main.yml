@@ -1,0 +1,19 @@
+- name: Whoami
+  command: whoami
+  register: main_user
+  sudo: no
+  changed_when: False
+
+- name: Check if laravel installer is present
+  stat: path=/home/{{ main_user.stdout }}/.composer/vendor/laravel/installer/laravel
+  register: laravel_dir
+  changed_when: False
+  sudo: no
+
+- name: Install laravel installer
+  shell: composer global require "laravel/installer={{ larave1_installer_version }}"
+  when: laravel_dir.stat.exists == False
+  sudo: no
+
+- name: Make laravel installer globally available
+  file: src=/home/{{ main_user.stdout }}/.composer/vendor/laravel/installer/laravel path=/usr/bin/laravel state=link mode=u+x

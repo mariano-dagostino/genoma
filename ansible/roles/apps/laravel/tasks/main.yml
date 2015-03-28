@@ -1,0 +1,49 @@
+- name: Check if Laravel app {{ hostname }} is already downloaded
+  stat: path={{ root_dir }}
+  register: app_downloaded
+
+- name: Download latest laravel version for {{ hostname }}
+  command: "laravel new {{ root_dir | basename }}"
+  when: app_downloaded.stat.exists == false and (version is not defined or   version == false)
+  register: downloaded
+  sudo: no
+  args:
+    chdir: "{{ root_dir | dirname }}"
+
+- name: Add {{ hostname }} to the hosts file
+  lineinfile:
+    dest=/etc/hosts
+    line="127.0.0.1 {{ hostname }}"
+    state=present
+
+- name: Download laravel {{ version }} for {{ hostname }}
+  command: "composer create-project laravel/laravel  {{ root_dir | basename }} {{version}} --prefer-dist"
+  when: app_downloaded.stat.exists == false and version is defined and version != false
+  register: downloaded
+  sudo: no
+  args:
+    chdir: "{{ root_dir | dirname }}"
+
+- name: Configure laravel hostname
+  lineinfile: dest="{{ root_dir }}/config/app.php" regexp="'url' => 'http://localhost',"  line="'url' => 'http://{{hostname}}'," state=present
+
+- name: Create the Database for {{ hostname }}
+  mysql_db: name="{{ database_name }}" state=present
+  when: vendors.database == 'mysql' or vendors.database == 'mariadb'
+  register: db_created
+
+- name: Add the {{ database_user }} user to administer laravel databases
+  mysql_user: name={{ database_user }} password={{ database_pass }} priv={{ database_name }}.*:ALL state=present
+
+- name: Configure database credentials for {{ hostname }}
+  template: src=local_env.j2 dest={{ root_dir }}/.env
+
+- name: Configure nginx virtualhost for {{ hostname }}
+  when: vendors.webserver == "nginx"
+  template: src=laravel.nginx.conf.j2 dest=/etc/nginx/sites-enabled/{{hostname}}.conf
+  notify: restart nginx
+
+- name: Configure apache virtualhost for {{ hostname }}
+  when: vendors.webserver == "apache"
+  template: src=laravel.apache.conf.j2 dest=/etc/apache2/sites-enabled/{{hostname}}.conf
+  notify: restart apache

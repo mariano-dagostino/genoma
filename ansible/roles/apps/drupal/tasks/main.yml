@@ -9,6 +9,7 @@
 
 - name: Create the database for {{ hostname }}
   mysql_db: name="{{ db_url | basename }}" state=present
+  when: vendors.database == 'mysql' or vendors.database == 'mariadb'
   register: db_created
 
 - name: Add {{ hostname }} to the hosts file

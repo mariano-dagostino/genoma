@@ -33,6 +33,7 @@
   register: db_created
 
 - name: Add the {{ database_user }} user to administer laravel databases
+  when: vendors.database == 'mysql' or vendors.database == 'mariadb'
   mysql_user: name={{ database_user }} password={{ database_pass }} priv={{ database_name }}.*:ALL state=present
 
 - name: Configure database credentials for {{ hostname }}

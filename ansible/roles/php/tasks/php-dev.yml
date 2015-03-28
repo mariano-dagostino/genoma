@@ -18,7 +18,7 @@
       backrefs=yes
       state=present
   notify:
-    - restart fpm
+    - restart apache
 
 - name: Display errors for PHP on nginx
   when: vendors.webserver == 'nginx'

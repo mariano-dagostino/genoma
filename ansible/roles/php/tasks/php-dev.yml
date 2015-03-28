@@ -1,15 +1,5 @@
-- name: Check if nginx is installed
-  shell: whereis nginx
-  register: nginx_path
-  changed_when: False
-
-- name: Check if apache is installed
-  shell: whereis apache2
-  register: apache_path
-  changed_when: False
-
 - name: Display errors for PHP on nginx
-  when: nginx_path.stdout != "nginx:"
+  when: vendors.webserver == 'nginx'
   lineinfile:
       dest=/etc/php5/fpm/php.ini
       regexp='display_errors = Off'
@@ -19,8 +9,19 @@
   notify:
     - restart fpm
 
+- name: Display errors for PHP on apache
+  when: vendors.webserver == 'apache'
+  lineinfile:
+      dest=/etc/php5/apache2/php.ini
+      regexp='display_errors = Off'
+      line='display_errors = On'
+      backrefs=yes
+      state=present
+  notify:
+    - restart fpm
+
 - name: Display errors for PHP on nginx
-  when: nginx_path.stdout != "nginx:"
+  when: vendors.webserver == 'nginx'
   lineinfile:
       dest=/etc/php5/fpm/pool.d/www.conf
       regexp="{{ item.regexp }}"

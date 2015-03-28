@@ -25,7 +25,7 @@
   apache2_module: state=present name=php5
 
 # Configure PHP for development
-- include: php56dev.yml
+- include: php-dev.yml
   when: env == "dev"
 
 - name: Config timezone for PHP and restart apache

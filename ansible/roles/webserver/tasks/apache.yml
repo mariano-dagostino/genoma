@@ -3,3 +3,14 @@
 
 - name: Enable rewrite mod
   apache2_module: state=present name=rewrite
+
+- name: Allow apache2 to modify files on the shared vagrant folder
+  when: ansible_ssh_user == 'vagrant'
+  lineinfile:
+    dest=/etc/apache2/envvars
+    regexp='export APACHE_RUN_GROUP=www-data'
+    line='export APACHE_RUN_GROUP=vagrant'
+    backrefs=yes
+    state=present
+  notify:
+    - restart apache

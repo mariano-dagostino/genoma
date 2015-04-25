@@ -52,20 +52,20 @@ With the following content on the  ```ansible/playbook.yml``` file:
           database: mariadb
 
       roles:
-        - { role: common }         # Installs the common tools
+        - { role: common }         # install the common tools
         - { role: webserver }      # Install apache
         - { role: php, version: "5.6", env: dev } # Install PHP 5.6
-        - { role: dev/tools }      # Installs vim, oh-my-zsh
-        - { role: dev/composer }   # Installs composer
-        - { role: dev/drush }      # Installs drush
-        - { role: database}        # Installs MariaDB
-        - { role: dev/phpmyadmin } # Installs PHPMyAdmin on port 81.
+        - { role: dev/tools }      # install vim, oh-my-zsh
+        - { role: dev/composer }   # install composer
+        - { role: dev/drush }      # install drush
+        - { role: database}        # install MariaDB
+        - { role: dev/phpmyadmin } # install PHPMyAdmin on port 81.
 
-        # Create the database, configure virtualhosts, download and installs drupal 7.34
+        # Create the database, configure virtualhosts, download and install drupal 7.36
         - { role: apps/drupal,
                 hostname: "drupal7.example.com",
                 root_dir: "/vagrant/drupal7",
-                version: "7.34",
+                version: "7.36",
                 install: "yes",
                 db_url: "mysql://root:root@localhost/drupal7"
           }

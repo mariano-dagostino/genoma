@@ -20,7 +20,7 @@
     - { role: apps/drupal,
             hostname: "drupal7.example.com",
             root_dir: "/vagrant/drupal7",
-            version: "7.34",
+            version: "7.36",
             install: "yes",
             db_url: "mysql://root:root@localhost/drupal7"
       }

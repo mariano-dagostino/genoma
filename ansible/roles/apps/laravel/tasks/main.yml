@@ -24,9 +24,6 @@
   args:
     chdir: "{{ root_dir | dirname }}"
 
-- name: Configure laravel hostname
-  lineinfile: dest="{{ root_dir }}/config/app.php" regexp="'url' => 'http://localhost',"  line="'url' => 'http://{{hostname}}'," state=present
-
 - name: Create the Database for {{ hostname }}
   mysql_db: name="{{ database_name }}" state=present
   when: vendors.database == 'mysql' or vendors.database == 'mariadb'

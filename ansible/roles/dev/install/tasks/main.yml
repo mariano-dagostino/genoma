@@ -1,0 +1,4 @@
+- name: Install extra packages
+  apt: name={{item}}
+  when: packages is defined and packages != false and {{packages|length}} > 0
+  with_items: packages

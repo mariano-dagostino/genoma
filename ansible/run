@@ -10,6 +10,17 @@ if [ -n "${PROXY+1}" ]; then
   export {http,https,ftp}_proxy=$PROXY
 fi
 
+PROVISIONING_DIR=$(cd $(dirname "$0"); pwd)
+
+if [ ! -f $PROVISIONING_DIR/playbook.yml ]; then
+  clear
+  echo ""
+  echo "You need to define the $PROVISIONING_DIR/playbook.yml file first."
+  echo "You can use $PROVISIONING_DIR/playbook.example.yml as starting point."
+  echo ""
+  exit
+fi
+
 if ! hash ansible-playbook 2>/dev/null; then
     # Install git
     sudo -E apt-get update
@@ -33,8 +44,6 @@ if ! hash ansible-playbook 2>/dev/null; then
 else
     echo "Ansible is already installed"
 fi
-
-PROVISIONING_DIR=$(cd $(dirname "$0"); pwd)
 
 if [ -z ${PROXY+x} ]; then
   ansible-playbook -i 'localhost,' $PROVISIONING_DIR/playbook.yml --connection=local --extra-vars "git_protocol=$GIT_PROTOCOL"

@@ -37,6 +37,8 @@ same applications using a different version of PHP.
 
 ## Example:
 
+You can use the content from ```ansible/playbook.example.yml``` as example.
+
 With the following content on the  ```ansible/playbook.yml``` file:
 
     - hosts: all

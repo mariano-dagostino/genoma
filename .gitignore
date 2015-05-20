@@ -1,3 +1,4 @@
 .vagrant
+playbook.yml
 shared/*
 !shared/.gitkeep

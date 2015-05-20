@@ -10,3 +10,21 @@
   </Directory>
 </VirtualHost>
 
+
+{% if https == "yes" %}
+<VirtualHost *:443>
+  ServerName {{ hostname }}:443
+
+  SSLEngine on
+  SSLCertificateFile {{apache_cert_root_path}}/{{hostname}}.crt
+  SSLCertificateKeyFile {{apache_cert_root_path}}/{{hostname}}.key
+
+  DocumentRoot {{root_dir}}/public
+  <Directory {{root_dir}}/public>
+     Options Indexes FollowSymLinks MultiViews
+     AllowOverride All
+     Order allow,deny
+     allow from all
+  </Directory>
+</VirtualHost>
+{% endif %}

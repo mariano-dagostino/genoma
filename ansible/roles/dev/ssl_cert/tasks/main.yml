@@ -1,0 +1,8 @@
+- name: Ensure openssl is installed
+  apt: name=openssl state=present
+
+- include: apache.yml
+  when: vendors.webserver == 'apache'
+
+- include: nginx.yml
+  when: vendors.webserver == 'nginx'

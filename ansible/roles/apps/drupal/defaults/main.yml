@@ -1,4 +1,4 @@
-version: "7.34"
+version: "7.37"
 folder_name: drupal
 drush_options: ""
 admin_user: "admin"
@@ -8,4 +8,7 @@ profile: "standard"
 site_name: "Drupal"
 extra_install_params: ""
 webserver: false
+https: "no"
 debug: false
+apache_cert_root_path: '/etc/apache2/ssl'
+nginx_cert_root_path: '/etc/nginx/ssl'

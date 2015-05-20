@@ -2,6 +2,12 @@ server {
         server_name {{ hostname }};
         root {{root_dir}};
 
+        {% if https == "yes" %}
+        listen 443 ssl;
+        ssl_certificate {{nginx_cert_root_path}}/{{hostname}}.crt;
+        ssl_certificate_key {{nginx_cert_root_path}}/{{hostname}}.key;
+        {% endif %}
+
         index index.php;
 
         location = /favicon.ico {
@@ -38,4 +44,3 @@ server {
                 log_not_found off;
         }
 }
-

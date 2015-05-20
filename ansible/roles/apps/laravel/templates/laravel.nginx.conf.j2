@@ -1,12 +1,14 @@
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
-
     root {{ root_dir }}/public;
     index index.php index.html index.htm;
 
     server_name {{ hostname }};
 
+    {% if https == "yes" %}
+    listen 443 ssl;
+    ssl_certificate {{nginx_cert_root_path}}/{{hostname}}.crt;
+    ssl_certificate_key {{nginx_cert_root_path}}/{{hostname}}.key;
+    {% endif %}
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -21,4 +23,3 @@ server {
         include fastcgi_params;
     }
 }
-

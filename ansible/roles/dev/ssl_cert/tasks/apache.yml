@@ -1,0 +1,32 @@
+- name: Create a directory to place the SSL Certificate
+  file: path={{apache_cert_root_path}} state=directory
+  register: ssl_cert_path_output
+
+- name: Enable apache ssl module
+  apache2_module: state=present name=ssl
+
+- name: Check if SSL certificete for {{hostname}} was already created
+  stat: path="{{ssl_cert_path_output.path}}/{{hostname}}.key"
+  register: ssl_path
+
+- name: Create a Self Signed SSL Certificate
+  command: "openssl req -subj '/CN={{hostname}}/O={{cert_organization_name}}/OU={{cert_organization_unit}}/ST={{cert_state}}/L={{cert_city}}/C={{cert_country}}' -new -newkey rsa:{{cert_rsa}} -days {{cert_days}} -nodes -x509 -keyout {{ssl_cert_path_output.path}}/{{hostname}}.key -out {{ssl_cert_path_output.path}}/{{hostname}}.crt"
+  when: ssl_path.stat.exists == false
+
+- name: Enable SSLStrictSNIVHostCheck on httpd.conf
+  lineinfile:
+      dest=/etc/apache2/httpd.conf
+      line="SSLStrictSNIVHostCheck on"
+      state=present
+      create=yes
+  notify:
+    - restart apache
+
+- name: Open port 443 for apache server
+  lineinfile:
+      dest=/etc/apache2/ports.conf
+      insertafter="NameVirtualHost *:80"
+      line="NameVirtualHost *:443"
+      state=present
+  notify:
+    - restart apache

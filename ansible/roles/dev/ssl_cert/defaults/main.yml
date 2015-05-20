@@ -1,0 +1,9 @@
+cert_rsa: 2048
+cert_days: 3650
+cert_country: 'AR'
+cert_organization_name: 'Organization Name'
+cert_organization_unit: 'Organization unit'
+cert_state: 'Organization State'
+cert_city: 'Organization City'
+apache_cert_root_path: '/etc/apache2/ssl'
+nginx_cert_root_path: '/etc/nginx/ssl'

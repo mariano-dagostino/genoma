@@ -7,6 +7,8 @@
 - name: Add dotdeb keys
   apt_key: url=http://www.dotdeb.org/dotdeb.gpg
   register: dotdeb_key
+  environment:
+    http_proxy: "{{ proxy }}"
 
 - name: Update APT cache
   when: dotdeb_key.changed
@@ -20,8 +22,8 @@
     - php5-fpm
     - php5-gd
     - php5-dev
+    - php5-cli
     - php5-curl
-    - php-apc
 
 - name: Install PHP packages
   apt: name={{item}}
@@ -32,5 +34,4 @@
     - php5-dev
     - php5-cli
     - php5-curl
-    - php-apc
 

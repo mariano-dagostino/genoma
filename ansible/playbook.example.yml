@@ -4,8 +4,8 @@
   vars:
     vm_name: testvm
     vendors:
-      webserver: nginx
-      database: mariadb
+      webserver: apache # alternatives: nginx
+      database: mysql   # alternatives: mariadb
 
   roles:
     - { role: common }

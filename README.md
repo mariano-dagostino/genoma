@@ -131,9 +131,9 @@ With the following content on the  ```ansible/playbook.yml``` file:
 ```
 
 Run:
-- vagrant up
-- vagrant ssh
-- /provision/run
+- ```vagrant up```
+- ```vagrant ssh```
+- ```/provisioning/run```
 
 And finally add ```192.168.55.10 drupal7.example.com``` to your the ```/etc/hosts```
 or ```c:\windows\system32\etc\drivers\hosts``` on your host machine.

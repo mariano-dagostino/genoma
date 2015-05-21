@@ -10,3 +10,8 @@
     - curl
     - wget
 
+- name: Install other utilities
+  apt: name={{item}}
+  with_items:
+    - tree
+

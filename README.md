@@ -41,36 +41,94 @@ You can use the content from ```ansible/playbook.example.yml``` as example.
 
 With the following content on the  ```ansible/playbook.yml``` file:
 
-    - hosts: all
-      sudo: True
-      remote_user: vagrant
-      vars:
-        vm_name: testvm
-        vendors:
-          # change this to nginx to install nginx instead of apache.
-          webserver: apache
+```yaml
 
-          # change this to mysql to install mysql instead of mariadb.
-          database: mariadb
+- hosts: all
+  sudo: True
+  remote_user: vagrant
+  vars:
+    vm_name: testvm
+    vendors:
+      webserver: apache # alternatives: nginx
+      database: mysql   # alternatives: mariadb
 
-      roles:
-        - { role: common }         # install the common tools
-        - { role: webserver }      # Install apache
-        - { role: php, version: "5.6", env: dev } # Install PHP 5.6
-        - { role: dev/tools }      # install vim, oh-my-zsh
-        - { role: dev/composer }   # install composer
-        - { role: dev/drush }      # install drush
-        - { role: database}        # install MariaDB
-        - { role: dev/phpmyadmin } # install PHPMyAdmin on port 81.
+  roles:
+    # Install basic packages, upgrade packages
+    - { role: common }
 
-        # Create the database, configure virtualhosts, download and install drupal 7.36
-        - { role: apps/drupal,
-                hostname: "drupal7.example.com",
-                root_dir: "/vagrant/drupal7",
-                version: "7.36",
-                install: "yes",
-                db_url: "mysql://root:root@localhost/drupal7"
-          }
+    # Install the webserver
+    - { role: webserver }
+
+    # Install the database server
+    - { role: database }
+
+    # Install PHP
+    - { role: php, version: "5.6", env: dev }
+
+    # Install and configure phpmyadmin on port 81
+    - { role: dev/phpmyadmin }
+
+    # Install git, vim, oh-my-zsh and other dev tools
+    - { role: dev/tools }
+
+    # Install composer and configure it globally
+    - { role: dev/composer }
+
+
+    # To Install drupal apps -------------------------------
+
+    # Install drush
+    - { role: dev/drush }
+
+
+    # Create a self signed certificate for the host
+    - { role: dev/ssl_cert, hostname: 'drupal7.example.com' }
+    # Install the drupal app
+    - { role: apps/drupal,
+            hostname: "drupal7.example.com",
+            root_dir: "/vagrant/drupal7",
+            version: "7.37",
+            install: "yes",
+            db_url: "mysql://root:root@localhost/drupal7",
+            https: "yes",
+      }
+
+    - { role: dev/ssl_cert, hostname: 'drupal8.example.com' }
+    - { role: apps/drupal,
+            hostname: "drupal8.example.com",
+            root_dir: "/vagrant/drupal8",
+            version: "8.0.0-beta10",
+            install: "yes",
+            db_url: "mysql://root:root@localhost/drupal8",
+            https: "no",
+      }
+
+    # To Install wordpress apps -----------------------------
+    - { role: dev/wpcli }
+
+    - { role: dev/ssl_cert, hostname: 'wp.example.com' }
+    - { role: apps/wordpress,
+            hostname: "wp.example.com",
+            root_dir: "/vagrant/wp",
+            database_name: "wp",
+            database_user: "root",
+            database_pass: "root",
+            https: "yes",
+      }
+
+    # To Install laravel apps --------------------------------
+    - { role: dev/laravel_installer }
+    - { role: dev/ssl_cert, hostname: 'laravel.example.com' }
+    - { role: apps/laravel,
+            hostname: "laravel.example.com",
+            root_dir: "/vagrant/laravel",
+            database_name: "laravel",
+            database_user: "laravel_user",
+            database_pass: "laravel_pass",
+            https: "yes",
+      }
+
+```
 
 Run:
 - vagrant up

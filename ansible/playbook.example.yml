@@ -8,16 +8,37 @@
       database: mysql   # alternatives: mariadb
 
   roles:
+    # Install basic packages, upgrade packages
     - { role: common }
+
+    # Install the webserver
     - { role: webserver }
+
+    # Install the database server
+    - { role: database }
+
+    # Install PHP
     - { role: php, version: "5.6", env: dev }
-    - { role: dev/tools }
-    - { role: dev/composer }
-    - { role: dev/drush }
-    - { role: database}
+
+    # Install and configure phpmyadmin on port 81
     - { role: dev/phpmyadmin }
 
+    # Install git, vim, oh-my-zsh and other dev tools
+    - { role: dev/tools }
+
+    # Install composer and configure it globally
+    - { role: dev/composer }
+
+
+    # To Install drupal apps -------------------------------
+
+    # Install drush
+    - { role: dev/drush }
+
+
+    # Create a self signed certificate for the host
     - { role: dev/ssl_cert, hostname: 'drupal7.example.com' }
+    # Install the drupal app
     - { role: apps/drupal,
             hostname: "drupal7.example.com",
             root_dir: "/vagrant/drupal7",
@@ -25,31 +46,6 @@
             install: "yes",
             db_url: "mysql://root:root@localhost/drupal7",
             https: "yes",
-
-      }
-
-    - { role: dev/wpcli }
-
-    - { role: dev/ssl_cert, hostname: 'wp.example.com' }
-    - { role: apps/wordpress,
-           hostname: "wp.example.com",
-           root_dir: "/vagrant/wp",
-           database_name: "wp",
-           database_user: "root",
-           database_pass: "root",
-           https: "yes",
-
-      }
-
-    - { role: dev/laravel_installer }
-    - { role: dev/ssl_cert, hostname: 'laravel.example.com' }
-    - { role: apps/laravel,
-           hostname: "laravel.example.com",
-           root_dir: "/vagrant/laravel",
-           database_name: "laravel",
-           database_user: "lara1",
-           database_pass: "lara2",
-           https: "yes",
       }
 
     - { role: dev/ssl_cert, hostname: 'drupal8.example.com' }
@@ -60,5 +56,30 @@
             install: "yes",
             db_url: "mysql://root:root@localhost/drupal8",
             https: "no",
-
       }
+
+    # To Install wordpress apps -----------------------------
+    - { role: dev/wpcli }
+
+    - { role: dev/ssl_cert, hostname: 'wp.example.com' }
+    - { role: apps/wordpress,
+            hostname: "wp.example.com",
+            root_dir: "/vagrant/wp",
+            database_name: "wp",
+            database_user: "root",
+            database_pass: "root",
+            https: "yes",
+      }
+
+    # To Install laravel apps --------------------------------
+    - { role: dev/laravel_installer }
+    - { role: dev/ssl_cert, hostname: 'laravel.example.com' }
+    - { role: apps/laravel,
+            hostname: "laravel.example.com",
+            root_dir: "/vagrant/laravel",
+            database_name: "laravel",
+            database_user: "laravel_user",
+            database_pass: "laravel_pass",
+            https: "yes",
+      }
+

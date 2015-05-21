@@ -29,6 +29,9 @@
     # Install composer and configure it globally
     - { role: dev/composer }
 
+    # Install sass
+    - { role: dev/sass }
+
 
     # To Install drupal apps -------------------------------
 

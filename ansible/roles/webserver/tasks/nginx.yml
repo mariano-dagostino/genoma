@@ -1,15 +1,8 @@
 - name: Install nginx
-  apt: name=nginx state=present
+  yum: name=epel-release state=present
 
-- name: Allow nginx to modify files on the shared vagrant folder
-  when: ansible_ssh_user == 'vagrant'
-  lineinfile:
-      dest=/etc/php5/fpm/pool.d/www.conf
-      regexp="{{ item.regexp }}"
-      line="{{ item.line }}"
-      backrefs=yes
-      state=present
-  with_items:
-      - { regexp: 'group = www-data', line: 'group = vagrant' }
-  notify:
-    - restart fpm
+- name: Install nginx
+  yum: name=nginx state=present
+
+- name: Start nginx
+  service: name=nginx state=started

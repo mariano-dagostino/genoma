@@ -1,17 +1,17 @@
 - name: Install zip and unzip
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
     - zip
     - unzip
 
 - name: Install curl and wget
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
     - curl
     - wget
 
 - name: Install other utilities
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
     - tree
 

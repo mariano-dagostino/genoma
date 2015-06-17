@@ -1,16 +1,16 @@
 - name: Configure Proxy globally
-  lineinfile: dest={{ item[0] }} line='{{ item[1] }}={{ proxy }}' state=present
+  lineinfile: dest={{ item[0] }} line='{{ item[1] }}={{ proxy }}' state=present create=true
   register: proxy_configured
+  when: proxy != false
   with_nested:
     - ["/etc/wgetrc", "/etc/environment", "/etc/bash.bashrc"]
     - [ "http_proxy", "https_proxy", "ftp_proxy" ]
 
-- name: Configure Proxy for apt
-  lineinfile:  dest=/etc/apt/apt.conf line='{{ item }}' create=yes
+- name: Configure Proxy for yum
+  lineinfile:  dest=/etc/yum.conf line='{{ item }}' create=yes
+  when: proxy != false
   with_items:
-  - 'Acquire::http::proxy "{{ proxy }}";'
-  - 'Acquire::ftp::proxy "{{ proxy }}";'
-  - 'Acquire::https::proxy "{{ proxy }}";'
+  - 'proxy={{ proxy }}'
 
 - name: Restart is required
   fail: msg="Proxy settings has changed, please log out and login again. Then run /provision/run to continue provision the machine"

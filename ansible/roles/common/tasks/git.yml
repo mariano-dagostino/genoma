@@ -1,5 +1,5 @@
 - name: Install git
-  apt: name=git-core
+  yum: name=git
 
 - name: Define git aliases
   copy: src=.gitconfig dest=~
@@ -7,7 +7,7 @@
 
 - name: Configure git to work with proxy
   command: "git config --global {{ item }} {{ proxy }}"
-  when: proxy is defined and proxy != ""
+  when: proxy is defined and proxy != "" and proxy != false
   with_items:
     - "http.proxy"
     - "https.proxy"

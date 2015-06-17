@@ -1,22 +1,12 @@
+- name: Enable MariaDB repo
+  copy: src=MariaDB.repo dest=/etc/yum.repos.d/
+
 - name: Install MariaDB dependencies
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
-    - python-software-properties
-
-- name: Add apt key for MariaDB
-  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCBCB082A1BB943DB state=present
-  environment:
-    http_proxy: "{{ proxy }}"
-
-- name: Add MariaDB respository
-  apt_repository: repo='deb http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.0/debian wheezy main' state=present update_cache=yes
-
-- name: Install MariaDB server
-  apt: name={{item}}
-  with_items:
-    - mariadb-server
-    - python-mysqldb
-    - php5-mysql
+    - MariaDB-server 
+    - MariaDB-client
+    - MySQL-python
 
 - name: Start the MySQL service
   action: service name=mysql state=started

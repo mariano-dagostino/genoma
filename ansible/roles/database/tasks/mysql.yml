@@ -1,9 +1,12 @@
+- name: Add Mysql Repository
+  yum: name=http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm state=present
+
 - name: Install Mysql server
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
-    - mysql-server
-    - python-mysqldb
-    - php5-mysql
+    - mysql-community-server
+    - mysql-community-client
+    - MySQL-python
 
 - name: Start the MySQL service
   action: service name=mysql state=started

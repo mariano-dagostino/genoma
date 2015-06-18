@@ -7,6 +7,19 @@
 - include: php56.yml
   when: version == "5.6"
 
+- name: Allow nginx to modify files on the shared vagrant folder
+  when: ansible_ssh_user == 'vagrant' and vendors.webserver == 'nginx'
+  lineinfile:
+      dest=/etc/php-fpm.d/www.conf
+      regexp="{{ item.regexp }}"
+      line="{{ item.line }}"
+      backrefs=yes
+      state=present
+  with_items:
+      - { regexp: 'group = apache', line: 'group = vagrant' }
+  notify:
+    - restart fpm
+
 - name: Ensure PHP is enabled for apache
   when: vendors.webserver == "apache"
   lineinfile:
@@ -28,17 +41,25 @@
 - include: php-dev.yml
   when: env == "dev"
 
-- name: Config timezone for PHP and restart apache
-  action: ini_file dest=/etc/php5/apache2/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600
-  when: vendors.webserver == "apache"
-  notify:
-    - restart apache
+- name: Configure timezone for PHP
+  lineinfile:
+      dest=/etc/php.ini
+      regexp="{{ item.regexp }}"
+      line="{{ item.line }}"
+      backrefs=yes
+      state=present
+  with_items:
+      - { regexp: ';date.timezone =', line: 'date.timezone = "America/Argentina/Buenos_Aires"' }
+  register: timezone_changed
 
-- name: Config timezone for PHP and restart nginx
-  action: ini_file dest=/etc/php5/fpm/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600
-  when: vendors.webserver == "nginx"
+- name: Restart server
+  debug: msg="Restart webserver"
+  when: timezone_changed.changed and vendors.webserver == 'nginx'
   notify:
-    - restart nginx
+    - restart fpm
 
-- name: Config timezone for PHP for cli
-  action: ini_file dest=/etc/php5/cli/conf.d/20-timezone.ini section=Date option=date.timezone value="{{ php_date_timezone }}" mode=0600
+- name: Restart server
+  debug: msg="Restart webserver"
+  when: timezone_changed.changed and vendors.webserver == 'apache'
+  notify:
+    - restart httpd

@@ -1,7 +1,7 @@
 - name: Display errors for PHP on nginx
   when: vendors.webserver == 'nginx'
   lineinfile:
-      dest=/etc/php5/fpm/php.ini
+      dest=/etc/php.ini
       regexp='display_errors = Off'
       line='display_errors = On'
       backrefs=yes
@@ -12,18 +12,19 @@
 - name: Display errors for PHP on apache
   when: vendors.webserver == 'apache'
   lineinfile:
-      dest=/etc/php5/apache2/php.ini
+      dest=/etc/php.ini
       regexp='display_errors = Off'
       line='display_errors = On'
       backrefs=yes
       state=present
   notify:
-    - restart apache
+    - restart httpd
+
 
 - name: Display errors for PHP on nginx
   when: vendors.webserver == 'nginx'
   lineinfile:
-      dest=/etc/php5/fpm/pool.d/www.conf
+      dest=/etc/php-fpm.d/www.conf
       regexp="{{ item.regexp }}"
       line="{{ item.line }}"
       backrefs=yes

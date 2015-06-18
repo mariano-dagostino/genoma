@@ -1,37 +1,15 @@
-- name: Add PHP 5.6 repositories
-  apt_repository: repo='{{item}}' state=present
-  with_items:
-    - "deb http://packages.dotdeb.org wheezy-php56 all"
-    - "deb-src http://packages.dotdeb.org wheezy-php56 all"
-
-- name: Add dotdeb keys
-  apt_key: url=http://www.dotdeb.org/dotdeb.gpg
-  register: dotdeb_key
-  environment:
-    http_proxy: "{{ proxy }}"
-
-- name: Update APT cache
-  when: dotdeb_key.changed
-  apt: update_cache=yes
+- name: Add PHP 5.6 repo
+  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
 
 - name: Install PHP packages
-  apt: name={{item}}
+  yum: name={{item}}
+  with_items:
+    - php56w
+    - php56w-common
+    - php56w-gd
+
+- name: Install specific fpm PHP packages
+  yum: name={{item}}
   when: vendors.webserver == 'nginx'
   with_items:
-    - php5
-    - php5-fpm
-    - php5-gd
-    - php5-dev
-    - php5-cli
-    - php5-curl
-
-- name: Install PHP packages
-  apt: name={{item}}
-  when: vendors.webserver == 'apache'
-  with_items:
-    - php5
-    - php5-gd
-    - php5-dev
-    - php5-cli
-    - php5-curl
-
+    - php56w-fpm

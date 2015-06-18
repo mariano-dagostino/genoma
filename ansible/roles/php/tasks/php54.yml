@@ -1,23 +1,16 @@
+- name: Add PHP 5.4 repo
+  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
+
 - name: Install PHP packages
-  apt: name={{item}}
+  yum: name={{item}}
+  with_items:
+    - php
+    - php-cli
+    - php-gd
+    - php-pecl-apcu
+
+- name: Install specific fpm PHP packages
+  yum: name={{item}}
   when: vendors.webserver == 'nginx'
   with_items:
-    - php5
-    - php5-fpm
-    - php5-gd
-    - php5-dev
-    - php5-cli
-    - php5-curl
-    - php-apc
-
-- name: Install PHP packages
-  apt: name={{item}}
-  when: vendors.webserver == 'apache'
-  with_items:
-    - php5
-    - php5-gd
-    - php5-dev
-    - php5-cli
-    - php5-curl
-    - php-apc
-
+    - php-fpm

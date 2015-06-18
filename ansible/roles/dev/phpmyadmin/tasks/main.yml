@@ -1,9 +1,9 @@
 - name: Install PHPMyadmin
-  apt: name=phpmyadmin
+  yum: name=phpmyadmin
 
 - name: Configure PHPMyadmin for nginx
   when: vendors.webserver == 'nginx'
-  copy: src=phpmyadmin.nginx.conf dest=/etc/nginx/sites-enabled/phpmyadmin.nginx.conf
+  copy: src=phpmyadmin.nginx.conf dest=/etc/nginx/conf.d/phpmyadmin.nginx.conf
   notify: restart nginx
 
 - name: Configure PHPMyadmin for apache

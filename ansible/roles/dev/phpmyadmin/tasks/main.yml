@@ -1,5 +1,12 @@
-- name: Install PHPMyadmin
-  yum: name=phpmyadmin
+- name: Install PHPMyadmin and its dependencies
+  yum: name={{item}}
+  with_items:
+    - php54w-tidy
+    - php54w-bcmath
+    - php54w-pdo
+    - php54w-mcrypt
+    - php54w-mysql
+    - phpmyadmin
 
 - name: Configure PHPMyadmin for nginx
   when: vendors.webserver == 'nginx'

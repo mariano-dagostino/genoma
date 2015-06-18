@@ -1,11 +1,11 @@
 #! /bin/bash
 
 # If you are using a proxy server, uncomment the next line
-#PROXY="http://proxy.corp.globant.com:3128"
+PROXY="http://proxy.corp.globant.com:3128"
 
 # Some firewalls block the git:// protocol, you can change it here (usually to https://)
 GIT_PROTOCOL="https://"
-
+USE_HTTPS=1
 if [ -n "${PROXY+1}" ]; then
   export {http,https,ftp}_proxy=$PROXY
 fi
@@ -21,30 +21,62 @@ if [ ! -f $PROVISIONING_DIR/playbook.yml ]; then
   exit
 fi
 
-if ! hash ansible-playbook 2>/dev/null; then
+python_version="$(python -V 2>&1)"
+
+# Check if python 2.6 is the current version installed
+# Then upgrade to python 2.7.8
+if [[ $python_version == *"2.6"* ]]; then
     # Install git
-    sudo -E yum install -y git python python-devel
+    sudo -E yum install -y wget git
 
-    # Install easy_install
-    wget http://peak.telecommunity.com/dist/ez_setup.py -O /tmp/ez_setup.py
-    sudo -E python /tmp/ez_setup.py
-    sudo -E easy_install pip
-    rm ez_setup.py
+    # Install pyenv
+    rm -f pyenv-installer*
+    wget https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer
+    chmod u+x pyenv-installer
+    source pyenv-installer
 
-    # Install PIP
-    sudo -E easy_install pip
+    # Install python dependencies
+    sudo -E yum install -y zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel mysql-devel 
 
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+    echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshenv
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshenv
+    echo 'eval "$(pyenv init -)"' >> ~/.zshenv
+
+    # Install python 2.7.8
+    ~/.pyenv/bin/pyenv install 2.7.8
+    
+    ~/.pyenv/bin/pyenv local 2.7.8
+    ~/.pyenv/bin/pyenv rehash
+    clear
+    echo "Python 2.7 was installed, logout and login to continue with the installation"
+    exit
+fi  
+
+~/.pyenv/bin/pyenv rehash
+
+if ! hash ansible-playbook 2>/dev/null; then
+    
     # Install Ansible dependencies
-    sudo -E pip install paramiko PyYAML Jinja2 httplib2
+    sudo -E ~/.pyenv/versions/2.7.8/bin/pip install paramiko PyYAML Jinja2 httplib2
 
     # Install Ansible
-    sudo -E pip install ansible
+    sudo -E ~/.pyenv/versions/2.7.8/bin/pip  install ansible
+    clear
+    echo "Ansible was installed, logout and login to continue with the installation"
+    exit
 else
     echo "Ansible is already installed"
 fi
+
+pyenv local 2.7.8
 
 if [ -z ${PROXY+x} ]; then
   ansible-playbook -i 'localhost,' $PROVISIONING_DIR/playbook.yml --connection=local --extra-vars "git_protocol=$GIT_PROTOCOL"
 else
   ansible-playbook -i 'localhost,' $PROVISIONING_DIR/playbook.yml --connection=local --extra-vars "proxy=$PROXY git_protocol=$GIT_PROTOCOL"
 fi
+

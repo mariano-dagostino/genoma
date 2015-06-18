@@ -5,10 +5,10 @@
   changed_when: False
 
 - name: Install vim and ctags
-  apt: name={{item}}
+  yum: name={{item}}
   with_items:
     - vim
-    - exuberant-ctags
+    - ctags
   when: install_vim
 
 - name: Check if amix/vimrc is already configured
@@ -45,7 +45,7 @@
   when: vim_ansible_downloaded.changed
 
 - name: Install zsh
-  apt: name=zsh state=present
+  yum: name=zsh state=present
   when: install_ohmyzsh
 
 - name: Check if zsh is arelady downloaded
@@ -60,9 +60,9 @@
   when: install_ohmyzsh and zsh_configured.stat.exists == False
   sudo: no
 
-- name: Set zsh as default shell
-  user: name={{ main_user.stdout }} shell="/bin/zsh"
-  when: install_ohmyzsh
+#- name: Set zsh as default shell
+#  user: name={{ main_user.stdout }} shell="/bin/zsh"
+#  when: install_ohmyzsh
 
 - name: Configure oh-my-zsh
   template: src=.zshrc dest=~/

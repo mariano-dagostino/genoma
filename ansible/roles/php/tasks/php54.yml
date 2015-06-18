@@ -1,16 +1,21 @@
-- name: Add PHP 5.4 repo
-  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
+- name: Add webtatic.com repo to install PHP 5.4
+  yum: name=https://mirror.webtatic.com/yum/el6/latest.rpm state=present
 
 - name: Install PHP packages
   yum: name={{item}}
   with_items:
-    - php
-    - php-cli
-    - php-gd
-    - php-pecl-apcu
+    - php54w-cli
+    - php54w-gd
+    - php54w-pecl-apcu
+
+- name: Install specific apache PHP packages
+  yum: name={{item}}
+  when: vendors.webserver == 'apache'
+  with_items:
+    - php54w
 
 - name: Install specific fpm PHP packages
   yum: name={{item}}
   when: vendors.webserver == 'nginx'
   with_items:
-    - php-fpm
+    - php54w-fpm

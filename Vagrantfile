@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "genoma-centos"
 
-  config.vm.box_url = "../CentOS-7.1.box"
+  config.vm.box_url = "../centos65-x86_64-20140116.box"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
